@@ -16,7 +16,14 @@ export class InvalidParametersError extends Error {
     this.message = message;
   }
 }
+export class NotFoundError extends Error {
+  public message: string;
 
+  public constructor(message: string) {
+    super(message);
+    this.message = message;
+  }
+}
 
 // Create the server instances
 const app = Express();
@@ -25,7 +32,7 @@ export const server = http.createServer(app);
 
 export default app;
 
-initialize();
+initialize()
 
 // Set the default content-type to JSON
 app.use(Express.json());
@@ -56,6 +63,12 @@ app.use(
     if(err instanceof InvalidParametersError){
       return res.status(400).json({
         message: 'Invalid parameters',
+        details: err?.message
+      })
+    }
+    if(err instanceof NotFoundError){
+      return res.status(404).json({
+        message: 'Resource not found',
         details: err?.message
       })
     }
